@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
  * This is the middle layer to set and get data related to Favourite Dog and it's breed
  */
 class FavouriteDogViewModel(private val repository: DogRepository) : ViewModel() {
-    val favouriteDogIntent = Channel<FavouriteDogIntent>(Channel.UNLIMITED)
+   private val favouriteDogIntent = Channel<FavouriteDogIntent>(Channel.UNLIMITED)
     private val _state = MutableStateFlow<FavouriteDogState>(FavouriteDogState.LoadingState)
     val state: StateFlow<FavouriteDogState>
         get() = _state
@@ -24,7 +24,11 @@ class FavouriteDogViewModel(private val repository: DogRepository) : ViewModel()
     init {
         handleIntent()
     }
-
+    fun sendIntent(intent: FavouriteDogIntent) {
+        viewModelScope.launch {
+            favouriteDogIntent.send(intent)
+        }
+    }
     private fun handleIntent() {
         viewModelScope.launch {
             favouriteDogIntent.consumeAsFlow().collect {

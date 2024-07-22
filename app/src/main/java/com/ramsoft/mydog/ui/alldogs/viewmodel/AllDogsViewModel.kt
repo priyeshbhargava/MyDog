@@ -15,13 +15,19 @@ import kotlinx.coroutines.launch
  * @author Priyesh Bhargava
  */
 class AllDogsViewModel(private val repository: DogRepository) : ViewModel() {
-    val allDogIntent = Channel<AllDogsIntent>(Channel.UNLIMITED)
+    private val allDogIntent = Channel<AllDogsIntent>(Channel.UNLIMITED)
     private val _state = MutableStateFlow<AllDogsState>(AllDogsState.LoadingState)
     val state: StateFlow<AllDogsState>
         get() = _state
 
     init {
         handleIntent()
+    }
+
+    fun sendIntent(intent: AllDogsIntent) {
+        viewModelScope.launch {
+            allDogIntent.send(intent)
+        }
     }
 
     private fun handleIntent() {
@@ -114,5 +120,6 @@ class AllDogsViewModel(private val repository: DogRepository) : ViewModel() {
 
         }
     }
+
 
 }

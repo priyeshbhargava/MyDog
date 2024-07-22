@@ -17,9 +17,16 @@ cardview = "1.0.0"
 material = "1.6.0"
 room = "2.6.1"
 retroFitLogging = "4.9.2"
+coroutines_version = "1.6.4"
+core_testing_version = "2.1.0"
+mockk_version = "1.12.5"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines_version" }
+core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "core_testing_version" }
+io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk_version" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

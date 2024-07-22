@@ -17,6 +17,7 @@ import com.ramsoft.mydog.ui.alldogs.viewmodel.AllDogsViewModel
 import com.ramsoft.mydog.ui.alldogs.viewstate.AllDogsState
 import com.ramsoft.mydog.ui.common.ViewModelFactory
 import kotlinx.coroutines.launch
+
 /**
  * @author Priyesh Bhargava
  */
@@ -24,7 +25,7 @@ class AllBreedsActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var allDogsViewModel: AllDogsViewModel
     private lateinit var rvAllDogs: RecyclerView
     private lateinit var allBreedsAdapter: AllBreedsAdapter
-    private lateinit var ivBack:ImageView
+    private lateinit var ivBack: ImageView
     private lateinit var ivCollection: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,9 +71,8 @@ class AllBreedsActivity : AppCompatActivity(), View.OnClickListener {
         /**
          * Launching the default intent to fetch Dog image
          */
-        lifecycleScope.launch {
-            allDogsViewModel.allDogIntent.send(AllDogsIntent.FetchAllBreeds)
-        }
+        allDogsViewModel.sendIntent(AllDogsIntent.FetchAllBreeds)
+
 
         /**
          * Callback from viewModel as per the states received
@@ -85,6 +85,7 @@ class AllBreedsActivity : AppCompatActivity(), View.OnClickListener {
                     is AllDogsState.FetchAllDogsBreeds -> {
                         allBreedsAdapter.setBreedsList(it.allBreeds)
                     }
+
                     else -> {}
                 }
             }
@@ -93,12 +94,13 @@ class AllBreedsActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.ivBack->{
+        when (v?.id) {
+            R.id.ivBack -> {
                 finish()
             }
-            R.id.ivCollection ->{
-                startActivity(Intent(this@AllBreedsActivity,MyDogsCollectionActivity::class.java))
+
+            R.id.ivCollection -> {
+                startActivity(Intent(this@AllBreedsActivity, MyDogsCollectionActivity::class.java))
             }
         }
 

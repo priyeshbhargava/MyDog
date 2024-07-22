@@ -20,7 +20,7 @@ abstract class DogDatabaseManager : RoomDatabase() {
         fun getDatabase(context: Context): DogDatabaseManager {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
+                    context,
                     DogDatabaseManager::class.java,
                     "dog_database").build()
                 INSTANCE = instance

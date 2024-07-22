@@ -22,15 +22,15 @@ import kotlinx.coroutines.launch
 /**
  * @author Priyesh Bhargava
  */
-class MyDogsCollectionActivity:AppCompatActivity(), View.OnClickListener {
-    private lateinit var breedName:String
-    private lateinit var tvBreed:TextView
+class MyDogsCollectionActivity : AppCompatActivity(), View.OnClickListener {
+    private lateinit var breedName: String
+    private lateinit var tvBreed: TextView
     private lateinit var allDogsViewModel: AllDogsViewModel
     private lateinit var rvAllDogs: RecyclerView
     private lateinit var dogsByBreedAdapter: DogsByBreedAdapter
     private lateinit var ivBack: ImageView
     private lateinit var ivImgCount: ImageView
-    private lateinit var tvNoData:TextView
+    private lateinit var tvNoData: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dogs_by_breeds)
@@ -42,7 +42,7 @@ class MyDogsCollectionActivity:AppCompatActivity(), View.OnClickListener {
         tvNoData = findViewById(R.id.tvNoData)
         dogsByBreedAdapter = DogsByBreedAdapter(this@MyDogsCollectionActivity, listOf())
         rvAllDogs.adapter = dogsByBreedAdapter
-        rvAllDogs.layoutManager = GridLayoutManager(this,3)
+        rvAllDogs.layoutManager = GridLayoutManager(this, 3)
         ivBack.setOnClickListener(this)
         ivImgCount.visibility = GONE
 
@@ -58,9 +58,7 @@ class MyDogsCollectionActivity:AppCompatActivity(), View.OnClickListener {
         /**
          * Launching the default intent to fetch Dog image
          */
-        lifecycleScope.launch {
-            allDogsViewModel.allDogIntent.send(AllDogsIntent.FetchDogsCollection)
-        }
+        allDogsViewModel.sendIntent(AllDogsIntent.FetchDogsCollection)
 
         /**
          * Callback from viewModel as per the states received
@@ -72,20 +70,20 @@ class MyDogsCollectionActivity:AppCompatActivity(), View.OnClickListener {
                 when (it) {
 
                     is AllDogsState.DogsCollection -> {
-                      val imgList =  it.allDogByBreed.map { data->
-                          data.url
+                        val imgList = it.allDogByBreed.map { data ->
+                            data.url
                         }
-                        println("imgList>>"+imgList)
+                        println("imgList>>" + imgList)
                         dogsByBreedAdapter.setDogsImgList(imgList)
-                        if(imgList.isEmpty()){
+                        if (imgList.isEmpty()) {
                             tvNoData.visibility = VISIBLE
                             rvAllDogs.visibility = GONE
-                        }
-                        else {
+                        } else {
                             tvNoData.visibility = GONE
                             rvAllDogs.visibility = VISIBLE
                         }
                     }
+
                     else -> {
 
                     }
@@ -97,8 +95,8 @@ class MyDogsCollectionActivity:AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.ivBack->{
+        when (v?.id) {
+            R.id.ivBack -> {
                 finish()
             }
         }

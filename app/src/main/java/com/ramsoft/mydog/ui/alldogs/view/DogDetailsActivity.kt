@@ -6,16 +6,14 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.ramsoft.mydog.R
 import com.ramsoft.mydog.data.database.DogDao
-import com.ramsoft.mydog.data.database.DogDatabaseManager
 import com.ramsoft.mydog.ui.alldogs.intent.AllDogsIntent
 import com.ramsoft.mydog.ui.alldogs.viewmodel.AllDogsViewModel
 import com.ramsoft.mydog.ui.common.ViewModelFactory
 import com.ramsoft.mydog.utils.Utility
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.launch
+
 /**
  * @author Priyesh Bhargava
  */
@@ -83,17 +81,11 @@ class DogDetailsActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnAddToFav -> {
-
-                lifecycleScope.launch {
-                    allDogsViewModel.allDogIntent.send(AllDogsIntent.AddFavouriteDogImg(dogImg))
-                }
-
+              allDogsViewModel.sendIntent(AllDogsIntent.AddFavouriteDogImg(dogImg))
             }
 
             R.id.btnAddToCollection -> {
-                lifecycleScope.launch {
-                    allDogsViewModel.allDogIntent.send(AllDogsIntent.AddDogImgToCollection(dogImg))
-                }
+                    allDogsViewModel.sendIntent(AllDogsIntent.AddDogImgToCollection(dogImg))
             }
 
             R.id.btnShare -> {
@@ -101,9 +93,8 @@ class DogDetailsActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.btnAddAsFavBreed -> {
-                lifecycleScope.launch {
-                    allDogsViewModel.allDogIntent.send(AllDogsIntent.AddFavouriteBreedName(breedName))
-                }
+                    allDogsViewModel.sendIntent(AllDogsIntent.AddFavouriteBreedName(breedName))
+
             }
 
             R.id.btnSave -> {

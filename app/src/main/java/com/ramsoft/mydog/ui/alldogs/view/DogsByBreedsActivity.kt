@@ -23,9 +23,9 @@ import kotlinx.coroutines.launch
 /**
  * @author Priyesh Bhargava
  */
-class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
-    private lateinit var breedName:String
-    private lateinit var tvBreed:TextView
+class DogsByBreedsActivity : AppCompatActivity(), View.OnClickListener {
+    private lateinit var breedName: String
+    private lateinit var tvBreed: TextView
     private lateinit var allDogsViewModel: AllDogsViewModel
     private lateinit var rvAllDogs: RecyclerView
     private lateinit var dogsByBreedAdapter: DogsByBreedAdapter
@@ -41,19 +41,19 @@ class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
         ivImgCount = findViewById(R.id.ivImgCount)
         dogsByBreedAdapter = DogsByBreedAdapter(this@DogsByBreedsActivity, listOf())
         rvAllDogs.adapter = dogsByBreedAdapter
-        rvAllDogs.layoutManager = GridLayoutManager(this,3)
+        rvAllDogs.layoutManager = GridLayoutManager(this, 3)
         ivBack.setOnClickListener(this)
         ivImgCount.setOnClickListener(this)
-        if(intent.hasExtra("breed_name")){
+        if (intent.hasExtra("breed_name")) {
             breedName = intent.getStringExtra("breed_name").toString()
             tvBreed.text = breedName
         }
         dogsByBreedAdapter.setClickListener(object : OnClickListener {
             override fun onClick(view: View, position: Int) {
                 //Main detail
-                val i = Intent(this@DogsByBreedsActivity,DogDetailsActivity::class.java)
-                i.putExtra("breed_name",breedName)
-                i.putExtra("dog_url",dogsByBreedAdapter.imgList[position])
+                val i = Intent(this@DogsByBreedsActivity, DogDetailsActivity::class.java)
+                i.putExtra("breed_name", breedName)
+                i.putExtra("dog_url", dogsByBreedAdapter.imgList[position])
                 startActivity(i)
             }
         })
@@ -71,9 +71,8 @@ class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
         /**
          * Launching the default intent to fetch Dog image
          */
-        lifecycleScope.launch {
-            allDogsViewModel.allDogIntent.send(AllDogsIntent.FetchAllDogByBreed(breedName))
-        }
+        allDogsViewModel.sendIntent(AllDogsIntent.FetchAllDogByBreed(breedName))
+
 
         /**
          * Callback from viewModel as per the states received
@@ -84,12 +83,17 @@ class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
 
                 when (it) {
                     is AllDogsState.DogsByBreed -> {
-                        println("it.allDogByBreed>>"+it.allDogByBreed.toList())
+                        println("it.allDogByBreed>>" + it.allDogByBreed.toList())
                         dogsByBreedAdapter.setDogsImgList(it.allDogByBreed.toList())
                     }
 
                     is AllDogsState.GetImageCount -> {
-                        allDogsViewModel.allDogIntent.send(AllDogsIntent.FetchDogByBreed(breedName,it.count))
+                        allDogsViewModel.sendIntent(
+                            AllDogsIntent.FetchDogByBreed(
+                                breedName,
+                                it.count
+                            )
+                        )
                     }
 
                     else -> {}
@@ -107,19 +111,17 @@ class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
 
 
 // add a list
-        val imgCount = arrayOf("10", "20", "30", "40", "50"," Show all images")
-        builder?.setItems(imgCount
+        val imgCount = arrayOf("10", "20", "30", "40", "50", " Show all images")
+        builder?.setItems(
+            imgCount
         ) { dialog, which ->
-           val count =  imgCount[which]
-            lifecycleScope.launch {
-                if(imgCount.size-1 == which){
-                    allDogsViewModel.allDogIntent.send(AllDogsIntent.FetchAllDogByBreed(breedName))
-                }
-                else{
-                    allDogsViewModel.allDogIntent.send(AllDogsIntent.SetImageCount(count))
-                }
-
+            val count = imgCount[which]
+            if (imgCount.size - 1 == which) {
+                allDogsViewModel.sendIntent(AllDogsIntent.FetchAllDogByBreed(breedName))
+            } else {
+                allDogsViewModel.sendIntent(AllDogsIntent.SetImageCount(count))
             }
+
         }
 
 
@@ -129,11 +131,12 @@ class DogsByBreedsActivity:AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.ivBack->{
+        when (v?.id) {
+            R.id.ivBack -> {
                 finish()
             }
-            R.id.ivImgCount->{
+
+            R.id.ivImgCount -> {
                 dialog?.show()
             }
         }

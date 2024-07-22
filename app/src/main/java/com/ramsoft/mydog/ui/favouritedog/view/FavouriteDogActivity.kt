@@ -27,7 +27,7 @@ class FavouriteDogActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var favouriteDogViewModel: FavouriteDogViewModel
     private lateinit var dogImageView: ImageView
-    private lateinit var btnNext:AppCompatButton
+    private lateinit var btnNext: AppCompatButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favourite_dog)
@@ -53,10 +53,8 @@ class FavouriteDogActivity : AppCompatActivity(), View.OnClickListener {
         /**
          * Launching the default intent to fetch Dog image
          */
-        lifecycleScope.launch {
-            favouriteDogViewModel.favouriteDogIntent.send(FavouriteDogIntent.LoadingIntent)
-        }
 
+        favouriteDogViewModel.sendIntent(FavouriteDogIntent.LoadingIntent)
         /**
          * Callback from viewModel as per the states received
          */
@@ -66,7 +64,8 @@ class FavouriteDogActivity : AppCompatActivity(), View.OnClickListener {
 
                 when (it) {
                     is FavouriteDogState.DogSuccessState -> {
-                        Picasso.get().load(it.url).placeholder(R.drawable.progress_animation).into(dogImageView)
+                        Picasso.get().load(it.url).placeholder(R.drawable.progress_animation)
+                            .into(dogImageView)
                     }
 
                     is FavouriteDogState.DogFailureState -> {
@@ -98,11 +97,9 @@ class FavouriteDogActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.btnNext->{
-                lifecycleScope.launch {
-                    favouriteDogViewModel.favouriteDogIntent.send(FavouriteDogIntent.GotoNextScreen)
-                }
+        when (v?.id) {
+            R.id.btnNext -> {
+                    favouriteDogViewModel.sendIntent(FavouriteDogIntent.GotoNextScreen)
             }
         }
     }
